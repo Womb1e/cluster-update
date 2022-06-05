@@ -6,6 +6,4 @@
   serial: 1
   any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
   roles:
-    - role: drain
-    - role: os-update
-    - role: uncorden
+    - role: rolling-update
