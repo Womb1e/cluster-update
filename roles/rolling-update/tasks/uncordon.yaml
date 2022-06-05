@@ -1,9 +1,16 @@
 ---
-- name: wait for node {{ groups['master'][0] }} to be available
-  wait_for:
-    host: "{{ groups['master'][0] }}"
-    port: 6443
-    delay: 10
+#- name: wait for node {{ groups['master'][0] }} to be available
+#  wait_for:
+#    host: "{{ groups['master'][0] }}"
+#    port: 6443
+#    delay: 10
+
+- name: Wait for node to be ready
+  command: >-
+    {{ bin_dir }}/kubectl get node
+    {{ kube_override_hostname|default(inventory_hostname) }}
+  register: node
+  until: "Ready" in node.stdout    
 
 - name: Uncordon node
   command: >-
