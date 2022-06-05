@@ -10,6 +10,8 @@
     {{ bin_dir }}/kubectl get node
     {{ kube_override_hostname|default(inventory_hostname) }}
   register: node
+  retries: 30
+  delay: 10
   until: "'Ready' in node.stdout"   
 
 - name: Uncordon node
