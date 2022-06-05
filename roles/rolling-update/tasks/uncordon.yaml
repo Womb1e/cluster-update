@@ -10,7 +10,7 @@
     {{ bin_dir }}/kubectl get node
     {{ kube_override_hostname|default(inventory_hostname) }}
   register: node
-  until: "Ready" in node.stdout    
+  until: "'Ready' in node.stdout"   
 
 - name: Uncordon node
   command: >-
@@ -30,3 +30,20 @@
   delegate_to: "{{ groups['master'][0] }}"
   changed_when: false
   until: not (kubectl_get_node['stdout'] | from_json).spec.unschedulable is defined
+
+#- name: Verification
+#  block:
+#    - name: Verify that all nodes actually joined (check k3s-init.service if this fails)
+#      command:
+#        cmd: k3s kubectl get node  "{{ groups['master'][0] }}" -o=jsonpath="{.items[*].metadata.name}"
+#      register: nodes
+#      until: nodes.rc == 0 and (nodes.stdout.split() | length) == (groups['master'] | length)
+#      retries: "{{ retry_count | default(20) }}"
+#      delay: 10
+#      changed_when: false
+#  always:
+#    - name: Kill the temporary service used for initialization
+#      systemd:
+#        name: k3s-init
+#        state: stopped
+#      failed_when: false
