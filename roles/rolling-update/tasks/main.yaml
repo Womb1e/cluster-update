@@ -1,4 +1,5 @@
 ---
+
 # tasks file for k8s-reboot
 - name: Get the node's details
   command: >-
@@ -6,7 +7,7 @@
     {{ kube_override_hostname|default(inventory_hostname) }}
     -o json
   register: kubectl_get_node
-  delegate_to: "{{ groups['cluster'][0] }}"
+  delegate_to: "{{ groups['master'][0] }}"
   failed_when: false
   changed_when: false
 
