@@ -12,7 +12,7 @@
   register: node
   retries: 30
   delay: 10
-  until: "'Ready' or 'Ready,SchedulingDisabled' in node.stdout"   
+  until: "'Ready' in node.stdout or 'Ready,SchedulingDisabled' in node.stdout"   
 
 - name: Uncordon node
   command: >-
