@@ -11,10 +11,13 @@
     {{ kube_override_hostname|default(inventory_hostname) }}
     -o jsonpath="{.status.conditions[3].status}"
   register: node_details
-  retries: 30
-  delay: 10
-  until: node_details.rc == "True"
+ # retries: 30
+ # delay: 10
+ # until: 
   #until: "'Ready' in node_details.stdout or 'Ready,SchedulingDisabled' in node_details.stdout"   
+
+- debug:
+    var: node_details
 
 - name: Uncordon node
   command: >-
