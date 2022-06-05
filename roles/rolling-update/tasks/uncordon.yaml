@@ -13,7 +13,7 @@
   register: node_details
   retries: 30
   delay: 10
-  until: node_details == "True"
+  until: node_details.stdout == "True"
   #until: "'Ready' in node_details.stdout or 'Ready,SchedulingDisabled' in node_details.stdout"   
 
 - name: Uncordon node
