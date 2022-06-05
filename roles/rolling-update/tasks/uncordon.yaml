@@ -11,9 +11,9 @@
     {{ kube_override_hostname|default(inventory_hostname) }}
     -o jsonpath="{.status.conditions[3].status}"
   register: node_details
- # retries: 30
- # delay: 10
- # until: 
+  retries: 30
+  delay: 10
+  until: node_details.rc == 0 and node_details.stdout == True
   #until: "'Ready' in node_details.stdout or 'Ready,SchedulingDisabled' in node_details.stdout"   
 
 - debug:
