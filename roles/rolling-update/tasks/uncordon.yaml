@@ -9,10 +9,12 @@
   command: >-
     {{ bin_dir }}/kubectl get node
     {{ kube_override_hostname|default(inventory_hostname) }}
-  register: node
+    -o jsonpath="{.status.conditions[3].status}"
+  register: node_details
   retries: 30
   delay: 10
-  until: "'Ready' in node.stdout or 'Ready,SchedulingDisabled' in node.stdout"   
+  until: node_details == "True"
+  #until: "'Ready' in node_details.stdout or 'Ready,SchedulingDisabled' in node_details.stdout"   
 
 - name: Uncordon node
   command: >-
