@@ -1,0 +1,17 @@
+---
+- name: Update all packages
+  apt:
+    update_cache: yes
+    upgrade: 'yes'
+    autoclean: yes
+    autoremove: yes
+
+- name: Check if reboot is required
+  stat:
+    path: /var/run/reboot-required
+  register: reboot_required
+
+- name: Reboot and wait for node to come back up
+  reboot:
+    reboot_timeout: 3600
+  when: reboot_required.stat.exists

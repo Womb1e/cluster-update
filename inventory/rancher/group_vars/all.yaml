@@ -1,0 +1,11 @@
+ansible_user: chris
+
+# apiserver_endpoint is the virtual ip that is used for cluster api access
+apiserver_endpoint: "192.168.10.20"
+# Location for kubectl on the nodes.
+bin_dir: /usr/local/bin
+# Period of time in seconds given to each pod to terminate gracefully. If
+# negative, the default value specified in the pod will be used.
+drain_grace_period: 300
+# The length of time to wait before giving up, zero means infinite.
+drain_timeout: 3600s

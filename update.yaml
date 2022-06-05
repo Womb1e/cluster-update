@@ -1,0 +1,11 @@
+---
+- hosts: cluster
+  gather_facts: true
+  become: true
+  become_method: sudo
+  serial: 1
+  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  roles:
+    - role: drain
+    - role: os-update
+    - role: uncorden

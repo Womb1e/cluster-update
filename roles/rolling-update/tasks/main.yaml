@@ -1,0 +1,27 @@
+---
+# tasks file for k8s-reboot
+- name: Get the node's details
+  command: >-
+    {{ bin_dir }}/kubectl get node
+    {{ kube_override_hostname|default(inventory_hostname) }}
+    -o json
+  register: kubectl_get_node
+  delegate_to: "{{ groups['cluster'][0] }}"
+  failed_when: false
+  changed_when: false
+
+- name: Update Node
+  when:
+    # When status.conditions[x].type == Ready then check stats.conditions[x].status for True|False
+    - kubectl_get_node['stdout'] | from_json | json_query("status.conditions[?type == 'Ready'].status")
+    # If spec.unschedulable is defined then the node is cordoned
+    - not (kubectl_get_node['stdout'] | from_json).spec.unschedulable is defined
+  block:
+    - name: Cordon and drain node
+      include_tasks: drain.yaml
+
+    - name: Upgrade the Operating System
+      include_tasks: ubuntu.yaml
+
+    - name: Uncordon node
+      include_tasks: uncordon.yaml

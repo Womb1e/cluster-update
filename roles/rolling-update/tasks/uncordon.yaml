@@ -1,0 +1,19 @@
+---
+- name: Uncordon node
+  command: >-
+    {{ bin_dir }}/kubectl uncordon
+    {{ kube_override_hostname|default(inventory_hostname) }}
+  delegate_to: "{{ redirect_server }}"
+  changed_when: false
+
+- name: Wait for node to uncordon
+  command: >-
+    {{ bin_dir }}/kubectl get node
+    {{ kube_override_hostname|default(inventory_hostname) }}
+    -o json
+  register: wait_for_uncordon
+  retries: 1000
+  delay: 10
+  delegate_to: "{{ redirect_server }}"
+  changed_when: false
+  until: not (kubectl_get_node['stdout'] | from_json).spec.unschedulable is defined
