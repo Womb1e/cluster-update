@@ -25,5 +25,6 @@
     --force
     --ignore-daemonsets
     --delete-emptydir-data
+    --pod-selector='app!=csi-attacher,app!=csi-provisioner'
   delegate_to: "{{ groups['master'][0] }}"
   changed_when: false
