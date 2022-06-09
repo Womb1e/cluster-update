@@ -15,11 +15,7 @@
   retries: 30
   delay: 10
   until: node_details.rc == 0 and node_details.stdout == 'True'
-  #until: "'Ready' in node_details.stdout or 'Ready,SchedulingDisabled' in node_details.stdout"   
-
-- debug:
-    var: node_details
-
+  
 - name: Uncordon node
   command: >-
     {{ bin_dir }}/kubectl uncordon
