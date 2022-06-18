@@ -31,4 +31,4 @@
   delay: 10
   delegate_to: "{{ groups['master'][0] }}"
   changed_when: false
-  until: node_details.rc == 0
+  until: wait_for_drain.rc == 0
