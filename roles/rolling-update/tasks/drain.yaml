@@ -26,5 +26,9 @@
     --ignore-daemonsets
     --delete-emptydir-data
     --pod-selector='app!=csi-attacher,app!=csi-provisioner'
+  register: wait_for_drain
+  retries: 100
+  delay: 10
   delegate_to: "{{ groups['master'][0] }}"
   changed_when: false
+  until: node_details.rc == 0
