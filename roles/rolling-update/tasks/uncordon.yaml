@@ -20,8 +20,12 @@
   command: >-
     {{ bin_dir }}/kubectl uncordon
     {{ kube_override_hostname|default(inventory_hostname) }}
+  register: uncordon_cmd_result
   delegate_to: "{{ groups['master'][0] }}"
   changed_when: false
+  retries: 30
+  delay: 10
+  until: uncordon_cmd_result.rc == 0
 
 - name: Wait for node to uncordon
   command: >-
@@ -29,7 +33,7 @@
     {{ kube_override_hostname|default(inventory_hostname) }}
     -o json
   register: wait_for_uncordon
-  retries: 1000
+  retries: 30
   delay: 10
   delegate_to: "{{ groups['master'][0] }}"
   changed_when: false
